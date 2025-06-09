@@ -6,7 +6,7 @@ import { Session, User } from "@supabase/supabase-js";
 export const SESSION_TIMEOUT = 60 * 60 * 1000;
 export const SESSION_STORAGE_KEY = 'supabase.auth.session';
 
-// Interface for session data
+
 export interface SessionData {
   session: Session | null;
   user: User | null;
