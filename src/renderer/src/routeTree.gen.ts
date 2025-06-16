@@ -11,14 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AppImport } from './routes/app'
+import { Route as CategoryImport } from './routes/category'
+import { Route as CategoriesImport } from './routes/categories'
 import { Route as AboutImport } from './routes/about'
+import { Route as IndexImport } from './routes/index'
+import { Route as CategoryUnsortedImport } from './routes/category/unsorted'
+import { Route as CategoryIdImport } from './routes/category/$id'
 
 // Create/Update Routes
 
-const AppRoute = AppImport.update({
-  id: '/app',
-  path: '/app',
+const CategoryRoute = CategoryImport.update({
+  id: '/category',
+  path: '/category',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CategoriesRoute = CategoriesImport.update({
+  id: '/categories',
+  path: '/categories',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -28,10 +38,35 @@ const AboutRoute = AboutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CategoryUnsortedRoute = CategoryUnsortedImport.update({
+  id: '/unsorted',
+  path: '/unsorted',
+  getParentRoute: () => CategoryRoute,
+} as any)
+
+const CategoryIdRoute = CategoryIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => CategoryRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -39,51 +74,121 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppImport
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesImport
       parentRoute: typeof rootRoute
+    }
+    '/category': {
+      id: '/category'
+      path: '/category'
+      fullPath: '/category'
+      preLoaderRoute: typeof CategoryImport
+      parentRoute: typeof rootRoute
+    }
+    '/category/$id': {
+      id: '/category/$id'
+      path: '/$id'
+      fullPath: '/category/$id'
+      preLoaderRoute: typeof CategoryIdImport
+      parentRoute: typeof CategoryImport
+    }
+    '/category/unsorted': {
+      id: '/category/unsorted'
+      path: '/unsorted'
+      fullPath: '/category/unsorted'
+      preLoaderRoute: typeof CategoryUnsortedImport
+      parentRoute: typeof CategoryImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface CategoryRouteChildren {
+  CategoryIdRoute: typeof CategoryIdRoute
+  CategoryUnsortedRoute: typeof CategoryUnsortedRoute
+}
+
+const CategoryRouteChildren: CategoryRouteChildren = {
+  CategoryIdRoute: CategoryIdRoute,
+  CategoryUnsortedRoute: CategoryUnsortedRoute,
+}
+
+const CategoryRouteWithChildren = CategoryRoute._addFileChildren(
+  CategoryRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/app': typeof AppRoute
+  '/categories': typeof CategoriesRoute
+  '/category': typeof CategoryRouteWithChildren
+  '/category/$id': typeof CategoryIdRoute
+  '/category/unsorted': typeof CategoryUnsortedRoute
 }
 
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/app': typeof AppRoute
+  '/categories': typeof CategoriesRoute
+  '/category': typeof CategoryRouteWithChildren
+  '/category/$id': typeof CategoryIdRoute
+  '/category/unsorted': typeof CategoryUnsortedRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/app': typeof AppRoute
+  '/categories': typeof CategoriesRoute
+  '/category': typeof CategoryRouteWithChildren
+  '/category/$id': typeof CategoryIdRoute
+  '/category/unsorted': typeof CategoryUnsortedRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/about' | '/app'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/categories'
+    | '/category'
+    | '/category/$id'
+    | '/category/unsorted'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/app'
-  id: '__root__' | '/about' | '/app'
+  to:
+    | '/'
+    | '/about'
+    | '/categories'
+    | '/category'
+    | '/category/$id'
+    | '/category/unsorted'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/categories'
+    | '/category'
+    | '/category/$id'
+    | '/category/unsorted'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AppRoute: typeof AppRoute
+  CategoriesRoute: typeof CategoriesRoute
+  CategoryRoute: typeof CategoryRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AppRoute: AppRoute,
+  CategoriesRoute: CategoriesRoute,
+  CategoryRoute: CategoryRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -96,15 +201,35 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/",
         "/about",
-        "/app"
+        "/categories",
+        "/category"
       ]
+    },
+    "/": {
+      "filePath": "index.tsx"
     },
     "/about": {
       "filePath": "about.tsx"
     },
-    "/app": {
-      "filePath": "app.tsx"
+    "/categories": {
+      "filePath": "categories.tsx"
+    },
+    "/category": {
+      "filePath": "category.tsx",
+      "children": [
+        "/category/$id",
+        "/category/unsorted"
+      ]
+    },
+    "/category/$id": {
+      "filePath": "category/$id.tsx",
+      "parent": "/category"
+    },
+    "/category/unsorted": {
+      "filePath": "category/unsorted.tsx",
+      "parent": "/category"
     }
   }
 }
