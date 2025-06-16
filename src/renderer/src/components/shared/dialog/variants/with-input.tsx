@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { WarningOctagonIcon } from "@phosphor-icons/react";
 
-import { ConfirmationModalProps } from "renderer/types";
+import { ConfirmationModalProps } from "@renderer/types";
 
 import {
   AlertDialog,
@@ -12,10 +12,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "renderer/components/ui/alert-dialog";
-import { Input } from "renderer/components/ui/input";
-import { Button } from "renderer/components/ui/button";
-import { Separator } from "renderer/components/ui/separator";
+} from "@renderer/components/ui/alert-dialog";
+import { Input } from "@renderer/components/ui/input";
+import { Button } from "@renderer/components/ui/button";
+import { Separator } from "@renderer/components/ui/separator";
 
 export default function WithInputConfirmationModal({
   show,

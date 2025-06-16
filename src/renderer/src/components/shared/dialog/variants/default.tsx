@@ -1,5 +1,5 @@
-import { cn } from "renderer/lib";
-import { ConfirmationModalProps } from "renderer/types";
+import { cn } from "@renderer/lib";
+import { ConfirmationModalProps } from "@renderer/types";
 
 import {
   AlertDialog,
@@ -9,8 +9,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "renderer/components/ui/alert-dialog";
-import { Button } from "renderer/components/ui/button";
+} from "@renderer/components/ui/alert-dialog";
+import { Button } from "@renderer/components/ui/button";
 
 export default function DefaultConfirmationModal({
   show,

@@ -5,7 +5,7 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 
-import { ConfirmationModalProps } from "renderer/types";
+import { ConfirmationModalProps } from "@renderer/types";
 
 import {
   AlertDialog,
@@ -15,8 +15,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "renderer/components/ui/alert-dialog";
-import { Button } from "renderer/components/ui/button";
+} from "@renderer/components/ui/alert-dialog";
+import { Button } from "@renderer/components/ui/button";
 
 export default function CustomizedFooterConfirmationModal({
   show,

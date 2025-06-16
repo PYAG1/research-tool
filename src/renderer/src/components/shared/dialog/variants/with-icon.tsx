@@ -1,5 +1,4 @@
-import { ConfirmationModalProps } from "renderer/types";
-import { WarningOctagonIcon } from "@phosphor-icons/react";
+import { ConfirmationModalProps } from "@renderer/types";
 
 import {
   AlertDialog,
@@ -9,8 +8,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "renderer/components/ui/alert-dialog";
-import { Button } from "renderer/components/ui/button";
+} from "@renderer/components/ui/alert-dialog";
+import { Button } from "@renderer/components/ui/button";
+import { WarningOctagonIcon } from "@phosphor-icons/react";
 
 export default function WithIconConfirmationModal({
   show,
@@ -24,7 +24,7 @@ export default function WithIconConfirmationModal({
   btnVariant = "destructive",
   icon = (
     <div className="mx-auto sm:mx-0 mb-4 flex size-14 items-center justify-center rounded-full bg-red-500/10">
-      <WarningOctagon className="size-7 text-red-500" />
+      <WarningOctagonIcon className="size-7 text-red-500" />
     </div>
   ),
   onCancel,

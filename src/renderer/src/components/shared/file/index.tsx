@@ -3,8 +3,8 @@ import { useAuth } from "@renderer/context/auth";
 import Dropzone, {
   DropzoneEmptyState,
   DropzoneContent
-} from "react-dropzone/.";
-import { useSupabaseUpload } from "renderer/hooks/use-supabase-upload";
+} from "react-dropzone";
+import { useSupabaseUpload } from "@renderer/hooks/use-supabase-upload";
 
 export default function FileUpload({
   onUploadComplete,
