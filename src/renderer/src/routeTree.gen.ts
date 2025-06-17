@@ -11,14 +11,22 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as PdfImport } from './routes/pdf'
 import { Route as CategoryImport } from './routes/category'
 import { Route as CategoriesImport } from './routes/categories'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as PdfIdImport } from './routes/pdf/$id'
 import { Route as CategoryUnsortedImport } from './routes/category/unsorted'
 import { Route as CategoryIdImport } from './routes/category/$id'
 
 // Create/Update Routes
+
+const PdfRoute = PdfImport.update({
+  id: '/pdf',
+  path: '/pdf',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const CategoryRoute = CategoryImport.update({
   id: '/category',
@@ -42,6 +50,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const PdfIdRoute = PdfIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PdfRoute,
 } as any)
 
 const CategoryUnsortedRoute = CategoryUnsortedImport.update({
@@ -88,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoryImport
       parentRoute: typeof rootRoute
     }
+    '/pdf': {
+      id: '/pdf'
+      path: '/pdf'
+      fullPath: '/pdf'
+      preLoaderRoute: typeof PdfImport
+      parentRoute: typeof rootRoute
+    }
     '/category/$id': {
       id: '/category/$id'
       path: '/$id'
@@ -101,6 +122,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/category/unsorted'
       preLoaderRoute: typeof CategoryUnsortedImport
       parentRoute: typeof CategoryImport
+    }
+    '/pdf/$id': {
+      id: '/pdf/$id'
+      path: '/$id'
+      fullPath: '/pdf/$id'
+      preLoaderRoute: typeof PdfIdImport
+      parentRoute: typeof PdfImport
     }
   }
 }
@@ -121,13 +149,25 @@ const CategoryRouteWithChildren = CategoryRoute._addFileChildren(
   CategoryRouteChildren,
 )
 
+interface PdfRouteChildren {
+  PdfIdRoute: typeof PdfIdRoute
+}
+
+const PdfRouteChildren: PdfRouteChildren = {
+  PdfIdRoute: PdfIdRoute,
+}
+
+const PdfRouteWithChildren = PdfRoute._addFileChildren(PdfRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/categories': typeof CategoriesRoute
   '/category': typeof CategoryRouteWithChildren
+  '/pdf': typeof PdfRouteWithChildren
   '/category/$id': typeof CategoryIdRoute
   '/category/unsorted': typeof CategoryUnsortedRoute
+  '/pdf/$id': typeof PdfIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -135,8 +175,10 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/categories': typeof CategoriesRoute
   '/category': typeof CategoryRouteWithChildren
+  '/pdf': typeof PdfRouteWithChildren
   '/category/$id': typeof CategoryIdRoute
   '/category/unsorted': typeof CategoryUnsortedRoute
+  '/pdf/$id': typeof PdfIdRoute
 }
 
 export interface FileRoutesById {
@@ -145,8 +187,10 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/categories': typeof CategoriesRoute
   '/category': typeof CategoryRouteWithChildren
+  '/pdf': typeof PdfRouteWithChildren
   '/category/$id': typeof CategoryIdRoute
   '/category/unsorted': typeof CategoryUnsortedRoute
+  '/pdf/$id': typeof PdfIdRoute
 }
 
 export interface FileRouteTypes {
@@ -156,24 +200,30 @@ export interface FileRouteTypes {
     | '/about'
     | '/categories'
     | '/category'
+    | '/pdf'
     | '/category/$id'
     | '/category/unsorted'
+    | '/pdf/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/categories'
     | '/category'
+    | '/pdf'
     | '/category/$id'
     | '/category/unsorted'
+    | '/pdf/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/categories'
     | '/category'
+    | '/pdf'
     | '/category/$id'
     | '/category/unsorted'
+    | '/pdf/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -182,6 +232,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CategoriesRoute: typeof CategoriesRoute
   CategoryRoute: typeof CategoryRouteWithChildren
+  PdfRoute: typeof PdfRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -189,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CategoriesRoute: CategoriesRoute,
   CategoryRoute: CategoryRouteWithChildren,
+  PdfRoute: PdfRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -204,7 +256,8 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/categories",
-        "/category"
+        "/category",
+        "/pdf"
       ]
     },
     "/": {
@@ -223,6 +276,12 @@ export const routeTree = rootRoute
         "/category/unsorted"
       ]
     },
+    "/pdf": {
+      "filePath": "pdf.tsx",
+      "children": [
+        "/pdf/$id"
+      ]
+    },
     "/category/$id": {
       "filePath": "category/$id.tsx",
       "parent": "/category"
@@ -230,6 +289,10 @@ export const routeTree = rootRoute
     "/category/unsorted": {
       "filePath": "category/unsorted.tsx",
       "parent": "/category"
+    },
+    "/pdf/$id": {
+      "filePath": "pdf/$id.tsx",
+      "parent": "/pdf"
     }
   }
 }
