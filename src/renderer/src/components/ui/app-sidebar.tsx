@@ -1,20 +1,24 @@
-import * as React from "react";
+import * as React from 'react'
 
-
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pin, PinOff, SettingsIcon, Trash } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Pin, PinOff, SettingsIcon, Trash } from 'lucide-react'
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "./context-menu";
+  ContextMenuTrigger
+} from './context-menu'
 
-import { toast } from "sonner";
-import { NavSecondary } from "./nav-secondary";
-import { NavUser } from "./nav-user";
+import { queryKey, STORAGE_KEYS } from '@renderer/constants'
+import { useAuth } from '@renderer/context/auth'
+import { useConfirmation } from '@renderer/context/confirmation'
+import CreateCategoryModal from '@renderer/features/categories/create-category-modal'
+import { DeleteCategoryMutation, GetAllCategories } from '@renderer/services/category'
+import { useLocation, useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { NavSecondary } from './nav-secondary'
+import { NavUser } from './nav-user'
 import {
   Sidebar,
   SidebarContent,
@@ -25,150 +29,134 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
-} from "./sidebar";
-import { Skeleton } from "./skeleton";
-import { VersionSwitcher } from "./version-switcher";
-import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
-import { DeleteCategoryMutation, GetAllCategories } from "@renderer/services/category";
-import { queryKey, STORAGE_KEYS } from "@renderer/constants";
-import { useConfirmation } from "@renderer/context/confirmation";
-import { useAuth } from "@renderer/context/auth";
-import CreateCategoryModal from "@renderer/features/categories/create-category-modal";
+  SidebarRail
+} from './sidebar'
+import { Skeleton } from './skeleton'
+import { VersionSwitcher } from './version-switcher'
 
 const navigationItems = {
   navSecondary: [
     {
-      title: "Settings",
-      url: "/app/settings",
-      icon: SettingsIcon,
+      title: 'Settings',
+      url: '/app/settings',
+      icon: SettingsIcon
     },
     {
-      title: "Trash",
-      url: "/app/trash",
-      icon: Trash,
-    },
-  ],
-};
+      title: 'Trash',
+      url: '/app/trash',
+      icon: Trash
+    }
+  ]
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useAuth();
-  const { showConfirmation } = useConfirmation();
-  const queryClient = useQueryClient();
-  const [pinnedCategories, setPinnedCategories] = React.useState<string[]>(
-    () => {
-      const stored = localStorage.getItem(STORAGE_KEYS.PINNED_CATEGORIES);
-      return stored ? JSON.parse(stored) : [];
-    }
-  );
+  const { user } = useAuth()
+  const { showConfirmation } = useConfirmation()
+  const queryClient = useQueryClient()
+  const [pinnedCategories, setPinnedCategories] = React.useState<string[]>(() => {
+    const stored = localStorage.getItem(STORAGE_KEYS.PINNED_CATEGORIES)
+    return stored ? JSON.parse(stored) : []
+  })
 
   const { mutateAsync: deleteCategory, isPending: isDeleting } = useMutation({
     mutationFn: DeleteCategoryMutation,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKey.categories] });
-    },
-  });
+      queryClient.invalidateQueries({ queryKey: [queryKey.categories] })
+    }
+  })
 
   function togglePinCategory(categoryId: string) {
-    const isPinned = pinnedCategories.includes(categoryId);
+    const isPinned = pinnedCategories.includes(categoryId)
 
     // Update state with new pinned categories
     const newPinned = isPinned
       ? pinnedCategories.filter((id) => id !== categoryId) // Remove if pinned
-      : [...pinnedCategories, categoryId]; // Add if not pinned
+      : [...pinnedCategories, categoryId] // Add if not pinned
 
     // Update state
-    setPinnedCategories(newPinned);
+    setPinnedCategories(newPinned)
 
     // Save to localStorage
-    localStorage.setItem(
-      STORAGE_KEYS.PINNED_CATEGORIES,
-      JSON.stringify(newPinned)
-    );
+    localStorage.setItem(STORAGE_KEYS.PINNED_CATEGORIES, JSON.stringify(newPinned))
 
-    toast.success(isPinned ? "Category unpinned" : "Category pinned");
+    toast.success(isPinned ? 'Category unpinned' : 'Category pinned')
   }
 
-  async function handleDeleteCategory(
-    categoryId: string,
-    categoryName: string
-  ) {
+  async function handleDeleteCategory(categoryId: string, categoryName: string) {
     showConfirmation({
-      title: "Delete Category",
-      variant: "destructive",
-      btnTitle: "yes, delete",
+      title: 'Delete Category',
+      variant: 'destructive',
+      btnTitle: 'yes, delete',
       isLoading: isDeleting,
       description: `Are you sure you want to delete the category "${categoryName}"? This action cannot be undone.`,
       onConfirm: () => {
         toast.promise(deleteCategory({ id: categoryId }), {
-          loading: "Deleting category...",
-          success: "Category deleted successfully",
+          loading: 'Deleting category...',
+          success: 'Category deleted successfully',
           error: (error) => {
-            console.error("Failed to delete category", error);
-            return "Failed to delete category";
-          },
-        });
+            console.error('Failed to delete category', error)
+            return 'Failed to delete category'
+          }
+        })
 
-        return true;
-      },
-    });
+        return true
+      }
+    })
   }
 
-  const getUserInitials = (avatar_url: any) => {
-    if (!user?.email) return "?";
-    const email = user.email;
-    const namePart = email.split("@")[0];
+  const getUserInitials = (email?: string) => {
+    if (!email) return '?'
+    const namePart = email.split('@')[0]
     if (namePart) {
-      return namePart.charAt(0).toUpperCase();
+      return namePart.charAt(0).toUpperCase()
     }
-    return "?";
-  };
+    return '?'
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: [queryKey.categories],
     queryFn: () =>
       GetAllCategories({
         page: 0,
-        pageSize: 10,
-      }),
-  });
+        pageSize: 10
+      })
+  })
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // const { id } = useParams();
-  const id="1"
-  const pathname = useLocation().pathname;
-  
+  const id = '1'
+  const pathname = useLocation().pathname
 
   const categories = React.useMemo(() => {
     const items =
       data?.data?.map((item) => ({
         ...item,
         documentcount: item.research_papers?.length ?? 0,
-        isPinned: pinnedCategories.includes(item.id),
-      })) ?? [];
+        isPinned: pinnedCategories.includes(item.id)
+      })) ?? []
 
     // Sort: pinned first, then by name
     return items.sort((a, b) => {
-      if (a.isPinned && !b.isPinned) return -1;
-      if (!a.isPinned && b.isPinned) return 1;
-      return a.name.localeCompare(b.name);
-    });
-  }, [data?.data, pinnedCategories]);
+      if (a.isPinned && !b.isPinned) return -1
+      if (!a.isPinned && b.isPinned) return 1
+      return a.name.localeCompare(b.name)
+    })
+  }, [data?.data, pinnedCategories])
 
   const userData = {
-    name: user?.user_metadata?.full_name ?? "User",
-    email: user?.email ?? "",
-    avatar: getUserInitials(user?.user_metadata?.avatar_url) || "",
-  };
+    name: user?.user_metadata?.full_name ?? 'User',
+    email: user?.email ?? '',
+    avatar: getUserInitials(user?.email) || ''
+  }
 
   if (isLoading) {
     return (
       <Sidebar {...props}>
         <SidebarHeader>
           <VersionSwitcher
-            versions={["1.0.1", "1.1.0-alpha", "2.0.0-beta1"]}
-            defaultVersion={"1.0.1"}
+            versions={['1.0.1', '1.1.0-alpha', '2.0.0-beta1']}
+            defaultVersion={'1.0.1'}
           />
         </SidebarHeader>
         <SidebarContent className="max-h-3/5 overflow-y-auto">
@@ -193,23 +181,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <CreateCategoryModal />
         </div>
         <SidebarRail />
-        <NavSecondary
-          items={navigationItems.navSecondary}
-          className="mt-auto"
-        />
+        <NavSecondary items={navigationItems.navSecondary} className="mt-auto" />
         <div className="ml-2 flex items-center gap-2 py-4">
           {user && <NavUser user={userData} />}
         </div>
       </Sidebar>
-    );
+    )
   }
 
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <VersionSwitcher
-          versions={["1.0.1", "1.1.0-alpha", "2.0.0-beta1"]}
-          defaultVersion={"1.0.1"}
+          versions={['1.0.1', '1.1.0-alpha', '2.0.0-beta1']}
+          defaultVersion={'1.0.1'}
         />
       </SidebarHeader>
       <SidebarContent className="max-h-3/5 overflow-y-auto">
@@ -218,8 +203,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               {categories?.map((item) => {
-                const isActive = item.id === id;
-                const isPinned = pinnedCategories.includes(item.id);
+                const isActive = item.id === id
+                const isPinned = pinnedCategories.includes(item.id)
 
                 return (
                   <ContextMenu key={item.id}>
@@ -228,7 +213,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <SidebarMenuButton
                           asChild
                           isActive={isActive}
-                            onClick={() => navigate({to:"/about"})} //home/${item.id}
+                          onClick={() => navigate({ to: '/about' })} //home/${item.id}
                           className="cursor-pointer"
                         >
                           <div className="flex items-center gap-2 py-1.5">
@@ -237,9 +222,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                               style={{ background: item.color }}
                             />
                             <span className="flex-1">{item.name}</span>
-                            {isPinned && (
-                              <Pin className="h-3 w-3 text-muted-foreground" />
-                            )}
+                            {isPinned && <Pin className="h-3 w-3 text-muted-foreground" />}
                             <span className="text-neutral-600 dark:text-gray-400 text-sm">
                               {item.documentcount ?? 0}
                             </span>
@@ -248,9 +231,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       </SidebarMenuItem>
                     </ContextMenuTrigger>
                     <ContextMenuContent className="w-48">
-                      <ContextMenuItem
-                        onClick={() => togglePinCategory(item.id)}
-                      >
+                      <ContextMenuItem onClick={() => togglePinCategory(item.id)}>
                         {isPinned ? (
                           <>
                             <PinOff className="mr-2 h-4 w-4" />
@@ -273,13 +254,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       </ContextMenuItem>
                     </ContextMenuContent>
                   </ContextMenu>
-                );
+                )
               })}
               <SidebarMenuItem key="view_all">
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === "/categories"}
-                  onClick={() => navigate({to:"/about"})}
+                  isActive={pathname === '/categories'}
+                  onClick={() => navigate({ to: '/about' })}
                   className="cursor-pointer"
                 >
                   <div className="flex items-center gap-2 py-1.5 my-2">
@@ -292,13 +273,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   isActive={!id}
-   onClick={() => navigate({to:"/about"})} //unsorted
+                  onClick={() => navigate({ to: '/about' })} //unsorted
                   className="cursor-pointer"
                 >
                   <div className="flex items-center gap-2 py-1.5">
                     <span
                       className="w-3 h-3 rounded-full inline-block"
-                      style={{ background: "#B0B0B0" }}
+                      style={{ background: '#B0B0B0' }}
                     />
                     <span className="flex-1">Unsorted papers</span>
                   </div>
@@ -314,9 +295,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </div>
       <SidebarRail />
       <NavSecondary items={navigationItems.navSecondary} className="mt-auto" />
-      <div className="ml-2 flex items-center gap-2 py-4">
-        {user && <NavUser user={userData} />}
-      </div>
+      <div className="ml-2 flex items-center gap-2 py-4">{user && <NavUser user={userData} />}</div>
     </Sidebar>
-  );
+  )
 }
