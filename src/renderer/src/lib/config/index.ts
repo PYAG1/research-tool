@@ -1,8 +1,9 @@
+import { Database } from '@renderer/types'
 import { createClient } from '@supabase/supabase-js'
 
 
 // Initialize Supabase client with localStorage persistence for auth session
-export const supabase = createClient(
+export const supabase = createClient<Database>(
   import.meta.env.VITE_SUPABASE_API_URL,
   import.meta.env.VITE_SUPABASE_ANON_KEY,
   {
