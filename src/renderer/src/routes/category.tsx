@@ -1,19 +1,20 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { PlusIcon } from "@phosphor-icons/react";
-import { useState } from "react";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@renderer/components/ui/sidebar';
-import { AppSidebar } from '@renderer/components/ui/app-sidebar';
-import { Button } from '@renderer/components/ui/button';
-import ThemeSwitcher from '@renderer/components/shared/theme';
-import AddDocumentModal from '@renderer/features/papers/add-paper-modal';
+import { PlusIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@renderer/components/ui/sidebar'
+import { AppSidebar } from '@renderer/components/ui/app-sidebar'
+import { Button } from '@renderer/components/ui/button'
+import ThemeSwitcher from '@renderer/components/shared/theme'
+import AddDocumentModal from '@renderer/features/papers/add-paper-modal'
+import ResearchPaperSearch from '@renderer/features/papers/paper-search'
 export const Route = createFileRoute('/category')({
-  component: RouteComponent,
+  component: RouteComponent
 })
 
 function RouteComponent() {
-      const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
-        <>
+    <>
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="flex flex-col">
@@ -21,7 +22,7 @@ function RouteComponent() {
             <SidebarTrigger className="-ml-1" />
 
             <div className="flex items-center gap-3">
-              {/* <ResearchPaperSearch /> */}
+              <ResearchPaperSearch />
               <Button
                 variant="outline"
                 className="rounded-full w-8 h-8"
@@ -29,15 +30,15 @@ function RouteComponent() {
               >
                 <PlusIcon className="w-6 h-6" />
               </Button>
-
-              <ThemeSwitcher />
+              <ThemeSwitcher />[
             </div>
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 overflow-auto">
+          <div className="flex flex-1 flex-col gap-4 p-4 h-full overflow-y-auto">
             <Outlet />
           </div>
         </SidebarInset>
       </SidebarProvider>
       <AddDocumentModal open={open} setOpen={setOpen} />
     </>
-  )}
+  )
+}
