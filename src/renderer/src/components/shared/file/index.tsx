@@ -1,10 +1,8 @@
 
 import { useAuth } from "@renderer/context/auth";
-import Dropzone, {
-  DropzoneEmptyState,
-  DropzoneContent
-} from "react-dropzone";
+
 import { useSupabaseUpload } from "@renderer/hooks/use-supabase-upload";
+import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@renderer/components/ui/dropzone";
 
 export default function FileUpload({
   onUploadComplete,
