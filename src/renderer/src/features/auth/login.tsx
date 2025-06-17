@@ -51,7 +51,7 @@ export function LoginForm({
   const { mutateAsync, isPending } = useMutation({
     mutationFn: SignInMutation,
     onSuccess: () => {
-      nav("/app/unsorted");
+      nav({to:"/category/unsorted"});
     },
   });
   function onSubmit(data: FormValues) {
