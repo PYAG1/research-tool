@@ -1,4 +1,4 @@
-import { ConfirmationModalProps } from "renderer/types";
+import { ConfirmationModalProps } from "@renderer/types";
 
 import InfoConfirmationModal from "./variants/info";
 import DefaultConfirmationModal from "./variants/default";
