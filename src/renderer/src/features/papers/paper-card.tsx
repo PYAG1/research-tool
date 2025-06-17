@@ -211,7 +211,14 @@ export default function PaperCard({
           <ContextMenuSeparator />
           <ContextMenuItem
             onClick={() =>
-              nav(`/pdf/${id}?category=${category}&title=${title}`)
+              nav({
+                to:"/pdf/$id",
+                params: { id: id },
+                search: {
+                  title:paperDetailsData?.data?.title ?? "",
+                  category:paperDetailsData?.data?.category?.name ?? "",
+                }, 
+              })
             }
           >
             <BookOpen className="mr-2 h-4 w-4" />
