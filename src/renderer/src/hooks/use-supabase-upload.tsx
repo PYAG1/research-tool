@@ -1,4 +1,5 @@
 import { supabase } from "@renderer/lib";
+import { processDocRPC } from "@renderer/services/rpc/process-doc-rpc";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   type FileError,
@@ -6,7 +7,7 @@ import {
   useDropzone,
 } from "react-dropzone";
 
-import { processDocRPC } from "renderer/services/process-doc-rpc";
+
 import { toast } from "sonner";
 
 interface FileWithPreview extends File {
