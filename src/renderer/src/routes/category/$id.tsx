@@ -1,7 +1,7 @@
 
 
-import { createFileRoute, Link } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from '@tanstack/react-router';
 import { CheckIcon, PencilIcon, PlusCircle, XIcon } from "lucide-react";
 import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
@@ -10,15 +10,15 @@ import { Button } from "@renderer/components/ui/button";
 import { Separator } from "@renderer/components/ui/separator";
 import { queryKey } from "@renderer/constants";
 
+import AddDocumentModal from '@renderer/features/papers/add-paper-modal';
+import PaperCard from '@renderer/features/papers/paper-card';
+import PapersSkeleton from '@renderer/features/papers/papers-skeleton-loader';
 import { cn } from "@renderer/lib";
 import {
   GetCategoryById,
   UpdateCategoryMutation,
 } from "@renderer/services/category";
 import { toast } from "sonner";
-import AddDocumentModal from '@renderer/features/papers/add-paper-modal';
-import PapersSkeleton from '@renderer/features/papers/papers-skeleton-loader';
-import PaperCard from '@renderer/features/papers/paper-card';
 export const Route = createFileRoute('/category/$id')({
   component: RouteComponent,
 })
@@ -137,10 +137,9 @@ const {id} = Route.useParams()
       error={error}
     >
       {(loadedData) => (
-        <div className="overflow-x-hidden w-full">
+        <div className="overflow-x-hidden w-full h-screen">
           <div className="w-full min-h-screen p-2">
             <div className="max-w-full px-4 sm:px-6">
-              <Link to="/pdf/cd2420e2-903d-4165-ab94-e3e5c19afccc/:1"></Link>
               <div className="flex items-center gap-2 mb-1">
                 {isEditing ? (
                   <div className="flex items-center gap-2">
