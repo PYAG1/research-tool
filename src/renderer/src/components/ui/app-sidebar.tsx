@@ -213,7 +213,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <SidebarMenuButton
                           asChild
                           isActive={isActive}
-                          onClick={() => navigate({ to: '/about' })} //home/${item.id}
+                          onClick={() => navigate({ to:"/category/$id",params:{id:item?.id}})} //home/${item.id}
                           className="cursor-pointer"
                         >
                           <div className="flex items-center gap-2 py-1.5">
@@ -260,7 +260,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   isActive={pathname === '/categories'}
-                  onClick={() => navigate({ to: '/about' })}
+                  onClick={() => navigate({ to: "/categories" })}
                   className="cursor-pointer"
                 >
                   <div className="flex items-center gap-2 py-1.5 my-2">
