@@ -30,7 +30,7 @@ function RouteComponent() {
               >
                 <PlusIcon className="w-6 h-6" />
               </Button>
-              <ThemeSwitcher />[
+              <ThemeSwitcher />
             </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4 h-full overflow-y-auto">
