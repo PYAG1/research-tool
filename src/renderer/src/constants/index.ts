@@ -6,6 +6,10 @@ export const queryKey={
     paper:"research_paper",
     highlights: "highlights",
     notes: "notes",
+    notebooks: "notebooks",
+    notebook: "notebook",
+    notebookSources: "notebook_sources",
+    sources: "sources",
 }
 
 
