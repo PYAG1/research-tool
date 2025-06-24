@@ -73,7 +73,7 @@ export async function GetCategoryById(id: string) {
   const { data: category, error } = await supabase
     .from("category")
     .select(
-      "*, research_papers(id,title,abstract,pdf_path,created_at,authors,pdf_path,is_deleted)"
+      "*, research_papers(id,title,abstract,pdf_path,created_at,authors,pdf_path,is_deleted), notebooks(id,title,created_at,updated_at,user_id,content)"
     )
     .eq("id", id)
     .single();
