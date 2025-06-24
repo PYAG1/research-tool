@@ -1,6 +1,20 @@
 import { supabase } from "@renderer/lib";
 import { TablesUpdate } from "@renderer/types";
 
+export async function GetPapers() {
+  const { data: papers, error } = await supabase
+    .from("research_papers")
+    .select("*")
+    .eq("is_deleted", false)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message || "Failed to fetch papers");
+  }
+
+  return { data: papers };
+}
+
 export async function GetAllPapers({
   start,
   end,
