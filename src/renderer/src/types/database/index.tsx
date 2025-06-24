@@ -172,6 +172,140 @@ export type Database = {
           }
         ];
       };
+
+            sources: {
+        Row: {
+          authors: string[] | null
+          created_at: string
+          doi: string | null
+          id: string
+          paper_id: string | null
+          publication: string | null
+          publication_date: string | null
+          title: string
+          type: string
+          updated_at: string
+          url: string | null
+          user_id: string | null
+        }
+        Insert: {
+          authors?: string[] | null
+          created_at?: string
+          doi?: string | null
+          id?: string
+          paper_id?: string | null
+          publication?: string | null
+          publication_date?: string | null
+          title: string
+          type: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          authors?: string[] | null
+          created_at?: string
+          doi?: string | null
+          id?: string
+          paper_id?: string | null
+          publication?: string | null
+          publication_date?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sources_paper_id_fkey"
+            columns: ["paper_id"]
+            isOneToOne: false
+            referencedRelation: "research_papers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+            notebook_sources: {
+        Row: {
+          citation_location: Json | null
+          created_at: string
+          id: string
+          notebook_id: string | null
+          source_id: string | null
+        }
+        Insert: {
+          citation_location?: Json | null
+          created_at?: string
+          id?: string
+          notebook_id?: string | null
+          source_id?: string | null
+        }
+        Update: {
+          citation_location?: Json | null
+          created_at?: string
+          id?: string
+          notebook_id?: string | null
+          source_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebook_sources_notebook_id_fkey"
+            columns: ["notebook_id"]
+            isOneToOne: false
+            referencedRelation: "notebooks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notebook_sources_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notebooks: {
+        Row: {
+          category_id: string | null
+          content: Json
+          created_at: string
+          id: string
+          is_deleted: boolean | null
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          content?: Json
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          content?: Json
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notebooks_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "category"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       research_papers: {
         Row: {
           abstract: string;
@@ -389,6 +523,8 @@ export const Constants = {
 export type ResearchPapers = Tables<"research_papers">;
 export type Categories = Tables<"category">;
 export type ResearchPapersInsert = Tables<"research_papers">;
+export type NotebookInsert = TablesInsert<"notebooks">;
+export type NotebookUpdate = TablesUpdate<"notebooks">;
 export interface ResearchPaperMetadata {
   title: string;
   abstract: string;

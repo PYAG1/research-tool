@@ -39,7 +39,13 @@ export const PaperInfoSchema = z.object({
   user_id: z.string().nullable().optional(),
 });
 
+
+export const NoteBookSchema = z.object({
+  title: z.string().min(1, 'Title is required')
+})
+
 export type PaperInfoSchemaType = z.infer<typeof PaperInfoSchema>;
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
 export type CreateCategorySchemaType = z.infer<typeof CreateCategorySchema>;
+export type NoteBookSchemaType = z.infer<typeof NoteBookSchema>;  
