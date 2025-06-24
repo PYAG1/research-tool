@@ -79,7 +79,6 @@ export default function PaperCard({
   const { data: paperDetailsData } = useQuery({
     queryKey: [queryKey.paper, id],
     queryFn: () => GetPaperById(id),
-    enabled: isDialogOpen, // Only fetch when dialog is opened
     staleTime: 60000,
   });
 

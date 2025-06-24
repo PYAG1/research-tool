@@ -11,20 +11,35 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TrashImport } from './routes/trash'
 import { Route as PdfImport } from './routes/pdf'
+import { Route as NotebookImport } from './routes/notebook'
 import { Route as CategoryImport } from './routes/category'
 import { Route as CategoriesImport } from './routes/categories'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as PdfIdImport } from './routes/pdf/$id'
+import { Route as NotebooksIdImport } from './routes/notebooks/$id'
 import { Route as CategoryUnsortedImport } from './routes/category/unsorted'
 import { Route as CategoryIdImport } from './routes/category/$id'
 
 // Create/Update Routes
 
+const TrashRoute = TrashImport.update({
+  id: '/trash',
+  path: '/trash',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const PdfRoute = PdfImport.update({
   id: '/pdf',
   path: '/pdf',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotebookRoute = NotebookImport.update({
+  id: '/notebook',
+  path: '/notebook',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -56,6 +71,12 @@ const PdfIdRoute = PdfIdImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => PdfRoute,
+} as any)
+
+const NotebooksIdRoute = NotebooksIdImport.update({
+  id: '/notebooks/$id',
+  path: '/notebooks/$id',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const CategoryUnsortedRoute = CategoryUnsortedImport.update({
@@ -102,11 +123,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoryImport
       parentRoute: typeof rootRoute
     }
+    '/notebook': {
+      id: '/notebook'
+      path: '/notebook'
+      fullPath: '/notebook'
+      preLoaderRoute: typeof NotebookImport
+      parentRoute: typeof rootRoute
+    }
     '/pdf': {
       id: '/pdf'
       path: '/pdf'
       fullPath: '/pdf'
       preLoaderRoute: typeof PdfImport
+      parentRoute: typeof rootRoute
+    }
+    '/trash': {
+      id: '/trash'
+      path: '/trash'
+      fullPath: '/trash'
+      preLoaderRoute: typeof TrashImport
       parentRoute: typeof rootRoute
     }
     '/category/$id': {
@@ -122,6 +157,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/category/unsorted'
       preLoaderRoute: typeof CategoryUnsortedImport
       parentRoute: typeof CategoryImport
+    }
+    '/notebooks/$id': {
+      id: '/notebooks/$id'
+      path: '/notebooks/$id'
+      fullPath: '/notebooks/$id'
+      preLoaderRoute: typeof NotebooksIdImport
+      parentRoute: typeof rootRoute
     }
     '/pdf/$id': {
       id: '/pdf/$id'
@@ -164,9 +206,12 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/categories': typeof CategoriesRoute
   '/category': typeof CategoryRouteWithChildren
+  '/notebook': typeof NotebookRoute
   '/pdf': typeof PdfRouteWithChildren
+  '/trash': typeof TrashRoute
   '/category/$id': typeof CategoryIdRoute
   '/category/unsorted': typeof CategoryUnsortedRoute
+  '/notebooks/$id': typeof NotebooksIdRoute
   '/pdf/$id': typeof PdfIdRoute
 }
 
@@ -175,9 +220,12 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/categories': typeof CategoriesRoute
   '/category': typeof CategoryRouteWithChildren
+  '/notebook': typeof NotebookRoute
   '/pdf': typeof PdfRouteWithChildren
+  '/trash': typeof TrashRoute
   '/category/$id': typeof CategoryIdRoute
   '/category/unsorted': typeof CategoryUnsortedRoute
+  '/notebooks/$id': typeof NotebooksIdRoute
   '/pdf/$id': typeof PdfIdRoute
 }
 
@@ -187,9 +235,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/categories': typeof CategoriesRoute
   '/category': typeof CategoryRouteWithChildren
+  '/notebook': typeof NotebookRoute
   '/pdf': typeof PdfRouteWithChildren
+  '/trash': typeof TrashRoute
   '/category/$id': typeof CategoryIdRoute
   '/category/unsorted': typeof CategoryUnsortedRoute
+  '/notebooks/$id': typeof NotebooksIdRoute
   '/pdf/$id': typeof PdfIdRoute
 }
 
@@ -200,9 +251,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/categories'
     | '/category'
+    | '/notebook'
     | '/pdf'
+    | '/trash'
     | '/category/$id'
     | '/category/unsorted'
+    | '/notebooks/$id'
     | '/pdf/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -210,9 +264,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/categories'
     | '/category'
+    | '/notebook'
     | '/pdf'
+    | '/trash'
     | '/category/$id'
     | '/category/unsorted'
+    | '/notebooks/$id'
     | '/pdf/$id'
   id:
     | '__root__'
@@ -220,9 +277,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/categories'
     | '/category'
+    | '/notebook'
     | '/pdf'
+    | '/trash'
     | '/category/$id'
     | '/category/unsorted'
+    | '/notebooks/$id'
     | '/pdf/$id'
   fileRoutesById: FileRoutesById
 }
@@ -232,7 +292,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CategoriesRoute: typeof CategoriesRoute
   CategoryRoute: typeof CategoryRouteWithChildren
+  NotebookRoute: typeof NotebookRoute
   PdfRoute: typeof PdfRouteWithChildren
+  TrashRoute: typeof TrashRoute
+  NotebooksIdRoute: typeof NotebooksIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -240,7 +303,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CategoriesRoute: CategoriesRoute,
   CategoryRoute: CategoryRouteWithChildren,
+  NotebookRoute: NotebookRoute,
   PdfRoute: PdfRouteWithChildren,
+  TrashRoute: TrashRoute,
+  NotebooksIdRoute: NotebooksIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -257,7 +323,10 @@ export const routeTree = rootRoute
         "/about",
         "/categories",
         "/category",
-        "/pdf"
+        "/notebook",
+        "/pdf",
+        "/trash",
+        "/notebooks/$id"
       ]
     },
     "/": {
@@ -276,11 +345,17 @@ export const routeTree = rootRoute
         "/category/unsorted"
       ]
     },
+    "/notebook": {
+      "filePath": "notebook.tsx"
+    },
     "/pdf": {
       "filePath": "pdf.tsx",
       "children": [
         "/pdf/$id"
       ]
+    },
+    "/trash": {
+      "filePath": "trash.tsx"
     },
     "/category/$id": {
       "filePath": "category/$id.tsx",
@@ -289,6 +364,9 @@ export const routeTree = rootRoute
     "/category/unsorted": {
       "filePath": "category/unsorted.tsx",
       "parent": "/category"
+    },
+    "/notebooks/$id": {
+      "filePath": "notebooks/$id.tsx"
     },
     "/pdf/$id": {
       "filePath": "pdf/$id.tsx",
