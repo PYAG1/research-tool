@@ -21,6 +21,7 @@ import { ImagePlaceholderToolbar } from "./image-placeholder-toolbar";
 import { ColorHighlightToolbar } from "./color-and-highlight";
 import { SearchAndReplaceToolbar } from "./search-and-replace-toolbar";
 import { CodeBlockToolbar } from "./code-block";
+import { CitationToolbar } from "./citation";
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
   return (
@@ -58,11 +59,10 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 
                 {/* Alignment Group */}
                 <AlignmentTooolbar />
-                <Separator orientation="vertical" className="mx-1 h-7" />
-
-                {/* Media & Styling Group */}
+                <Separator orientation="vertical" className="mx-1 h-7" />                {/* Media & Styling Group */}
                 <ImagePlaceholderToolbar />
                 <ColorHighlightToolbar />
+                <CitationToolbar />
                 <Separator orientation="vertical" className="mx-1 h-7" />
 
                 <div className="flex-1" />

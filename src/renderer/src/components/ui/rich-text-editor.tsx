@@ -22,6 +22,7 @@ import { TipTapFloatingMenu } from "../tiptap/extensions/floating-menu";
 import { ImageExtension } from "../tiptap/extensions/image";
 import { ImagePlaceholder } from "../tiptap/extensions/image-placeholder";
 import SearchAndReplace from "../tiptap/extensions/search-and-replace";
+import CitationExtension from "../tiptap/extensions/citation";
 
 interface RichTextEditorProps {
   content?: JSONContent;
@@ -78,10 +79,10 @@ export function RichTextEditor({
     Color,
     Highlight.configure({
       multicolor: true,
-    }),
-    ImageExtension,
+    }),    ImageExtension,
     ImagePlaceholder,
     SearchAndReplace,
+    CitationExtension,
     Typography,
   ];
   // Initialize editor
