@@ -5,3 +5,5 @@ out
 .eslintcache
 *.log*
 .env
+.cursor/mcp.json
+.vscode/mcp.json
